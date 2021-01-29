@@ -43,10 +43,12 @@ public class PlayerTeleportListener implements Listener {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(IridiumSkyblock.getInstance(), () -> toIsland.sendBorder(player), 1);
                 if (user.islandID != toIsland.id) {
                     player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().visitingIsland.replace("%player%", User.getUser(toIsland.owner).name).replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
-                    if (player.hasPermission("iridiumskyblock.silentvisit")) return;
+                    if (player.hasPermission("iridiumskyblock.silentvisit")) {
+                        return;
+                    }
                     for (String pl : toIsland.members) {
                         Player p = Bukkit.getPlayer(UUID.fromString(pl));
-                        if (p != null && p.canSee(player)) {
+                        if (p != null && p.canSee(player) && !p.hasMetadata("NPC")) {
                             p.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().visitedYourIsland.replace("%player%", player.getName()).replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
                         }
                     }
