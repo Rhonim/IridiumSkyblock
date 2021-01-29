@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class IslandDataManager {
 
@@ -24,20 +25,30 @@ public class IslandDataManager {
     //To Index exclusive
     public static List<Integer> getIslands(IslandSortType sortType, int fromIndex, int toIndex, boolean ignorePrivate) {
         List<Integer> islands;
+        Stream<Integer> stream;
         switch (sortType) {
             case VALUE:
-                islands = cache.keySet().stream().sorted(Comparator.comparing(integer -> cache.get(integer).value).reversed()).collect(Collectors.toList());
+                 stream = cache.keySet().stream().sorted(Comparator.comparing(integer -> cache.get(integer).value).reversed());
+                if (ignorePrivate) {
+                    stream = stream.filter(integer -> !cache.get(integer).isPrivate);
+                }
+                islands = stream.collect(Collectors.toList());
                 break;
             case VOTES:
-                islands = cache.keySet().stream().sorted(Comparator.comparing(integer -> cache.get(integer).votes).reversed()).collect(Collectors.toList());
+                stream = cache.keySet().stream().sorted(Comparator.comparing(integer -> cache.get(integer).votes).reversed());
+                if (ignorePrivate) {
+                    stream = stream.filter(integer -> !cache.get(integer).isPrivate);
+                }
+                islands = stream.collect(Collectors.toList());
                 break;
             default:
-                islands = Collections.emptyList();
+                return Collections.emptyList();
         }
-        if (ignorePrivate) {
-            islands = islands.stream().filter(integer -> !cache.get(integer).isPrivate).collect(Collectors.toList());
+
+        if (islands.size() < fromIndex + 1) {
+            return Collections.emptyList();
         }
-        if (islands.size() < fromIndex + 1) return Collections.emptyList();
+
         return islands.subList(fromIndex, Math.min(islands.size(), toIndex));
     }
 
