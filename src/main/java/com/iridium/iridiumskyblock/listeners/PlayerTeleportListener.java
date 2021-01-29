@@ -48,7 +48,7 @@ public class PlayerTeleportListener implements Listener {
                     }
                     for (String pl : toIsland.members) {
                         Player p = Bukkit.getPlayer(UUID.fromString(pl));
-                        if (p != null && p.canSee(player) && !p.hasMetadata("NPC")) {
+                        if (p != null && p.canSee(player)) {
                             p.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().visitedYourIsland.replace("%player%", player.getName()).replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
                         }
                     }
