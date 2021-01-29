@@ -24,7 +24,7 @@ public class IslandDataManager {
     //From Index (Starts at 0 inclusive)
     //To Index exclusive
     public static List<Integer> getIslands(IslandSortType sortType, int fromIndex, int toIndex, boolean ignorePrivate) {
-        List<Integer> islands;
+
         Stream<Integer> stream;
         switch (sortType) {
             case VALUE:
@@ -32,19 +32,18 @@ public class IslandDataManager {
                 if (ignorePrivate) {
                     stream = stream.filter(integer -> !cache.get(integer).isPrivate);
                 }
-                islands = stream.collect(Collectors.toList());
                 break;
             case VOTES:
                 stream = cache.keySet().stream().sorted(Comparator.comparing(integer -> cache.get(integer).votes).reversed());
                 if (ignorePrivate) {
                     stream = stream.filter(integer -> !cache.get(integer).isPrivate);
                 }
-                islands = stream.collect(Collectors.toList());
                 break;
             default:
                 return Collections.emptyList();
         }
 
+        List<Integer> islands = stream.collect(Collectors.toList());
         if (islands.size() < fromIndex + 1) {
             return Collections.emptyList();
         }
